@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Home from "./container/home/home";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Signin from "./container/signin/singin";
+import { isLogged } from "./action/authAction";
+import Private from "./HOC/privateRoutes";
+import Signup from "./container/signup/signup";
+import Category from "./container/category/category";
+import { initialData } from "./action/initialDataAction";
+import Product from "./container/product/product";
 function App() {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  useEffect(async () => {
+    if (!auth.authenticate) {
+      dispatch(isLogged());
+    }
+
+    if (auth.authenticate) {
+      dispatch(initialData());
+    }
+  }, [auth.authenticate]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Switch>
+        <Private path="/" exact component={Home} />
+        <Private path="/category" component={Category} />
+        <Private path="/product" component={Product} />
+        <Route path="/signin" component={Signin} />
+        <Route path="/signup" component={Signup} />
+      </Switch>
     </div>
   );
 }
