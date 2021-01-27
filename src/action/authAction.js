@@ -56,6 +56,7 @@ export const signup = (payload) => {
       const res = await axios.post("/admin/signup", { payload });
       if (res.status === 201) {
         console.log("createpass");
+        window.location.href = "/signin";
       }
     } catch (error) {
       dispatch({
