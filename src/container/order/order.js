@@ -31,6 +31,7 @@ function Order() {
       dispatch(updateStatus(payload)).then(() => {
         dispatch(getOrder());
       });
+      setStatus("");
       setShow(false);
     }
   };

@@ -9,6 +9,7 @@ import {
   createProduct,
   getProduct,
   deleteProductIndatabase,
+  upDateProduct,
 } from "../../action/productAction";
 import { MdCheckBoxOutlineBlank, MdCheckBox } from "react-icons/md";
 import { ImCross } from "react-icons/im";
@@ -20,12 +21,14 @@ function Product() {
   const product = useSelector((state) => state.product);
   const [show, setShow] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [productid, setProductid] = useState("");
   const [productname, setProductname] = useState("");
   const [quantity, setQuantity] = useState("");
   const [price, setPrict] = useState("");
   const [description, setDescription] = useState("");
   const [productPicture, setProductPicture] = useState([]);
   const [category, setCategory] = useState([]);
+  const [catUpdate, setCatUpdate] = useState("");
 
   const [inputname, setInputname] = useState("");
   const [inputquantity, setInputquantity] = useState("");
@@ -38,6 +41,9 @@ function Product() {
   const [senddeletelist, setSenddeletelist] = useState([]);
   const categoryStore = useSelector((state) => state.category);
   const [deleteProduct, setDeleteProduct] = useState(false);
+
+  const [edit, setEdit] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -54,12 +60,14 @@ function Product() {
 
   const handleClose = () => setShow(false);
   const handleShow = (product) => {
+    setProductid(product._id);
     setProductname(product.name);
     setQuantity(product.quantity);
     setPrict(product.price);
     setDescription(product.description);
     setProductPicture(product.picture);
     setCategory(product.category);
+    setCatUpdate(product.category._id);
     setShow(true);
   };
 
@@ -149,6 +157,116 @@ function Product() {
       </Table>
     );
   };
+  const handleSaveEdit = () => {
+    const payload = {
+      _id: productid,
+      productname,
+      quantity,
+      price,
+      description,
+      category: catUpdate,
+    };
+    dispatch(upDateProduct(payload));
+  };
+
+  const renderModalEdit = () => {
+    return (
+      <Modal show={edit} onHide={handleCloseEdit} size="lg" animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col>
+              <p style={{ fontWeight: "bold" }}>PRODUCTNAME</p>
+              <input
+                value={productname}
+                onChange={(e) => setProductname(e.target.value)}
+              />
+            </Col>
+            <Col>
+              <p style={{ fontWeight: "bold" }}>QUANTITY</p>
+              <input
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+              />
+            </Col>
+            <Col>
+              <p style={{ fontWeight: "bold" }}>PRICE</p>
+              <input value={price} onChange={(e) => setPrict(e.target.value)} />
+              <img
+                src="/img/thailand-baht.png"
+                width="20px"
+                style={{ marginBottom: "5px" }}
+              />
+            </Col>
+          </Row>
+          <br />
+          <br />
+          <Row>
+            <Col>
+              <p style={{ fontWeight: "bold" }}>DESCRIPTION</p>
+              <input
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Col>
+            <Col>
+              <p style={{ fontWeight: "bold" }}>CATEGORY</p>
+              <select
+                value={catUpdate}
+                onChange={(e) => setCatUpdate(e.target.value)}
+              >
+                <option value={category._id}>{category.name}</option>
+                {createOption(categoryStore.category).map((data) => (
+                  <option value={data._id} key={data._id}>
+                    {data.name}
+                  </option>
+                ))}
+              </select>
+            </Col>
+          </Row>
+          <br />
+          <br />
+          <Row>
+            <Col>
+              <p style={{ fontWeight: "bold" }}>PICTURE</p>
+              {productPicture.length > 0
+                ? productPicture.map((pic) => (
+                    <img
+                      src={"http://localhost:2000/public/" + pic.img}
+                      width="150px"
+                      height="150px"
+                      className="img-thumbnail"
+                      style={{ border: "0px solid" }}
+                      key={pic._id}
+                    />
+                  ))
+                : null}
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseEdit}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleSaveEdit}>
+            save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  const handleCloseEdit = () => {
+    setEdit(false);
+  };
+
+  const handleEdit = () => {
+    setEdit(true);
+    setShow(false);
+  };
+
   const renderModalPopup = () => {
     return (
       <Modal show={show} onHide={handleClose} size="lg" animation={false}>
@@ -211,8 +329,8 @@ function Product() {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
+          <Button variant="primary" onClick={handleEdit}>
+            Edit
           </Button>
         </Modal.Footer>
       </Modal>
@@ -271,11 +389,13 @@ function Product() {
   const handlePictureArray = (e) => {
     setInputpicture([...inputpicture, e.target.files[0]]);
   };
+
   const handledeletePicture = (name) => {
     let listpicture;
     listpicture = inputpicture.filter((data, index) => index != name);
     setInputpicture(listpicture);
   };
+
   const renderModalAdd = () => {
     return (
       <Modal show={showAdd} onHide={handleCloseAdd} size="lg" animation={false}>
@@ -448,6 +568,7 @@ function Product() {
         {renderTableProduct()}
         {renderModalPopup()}
         {renderModalAdd()}
+        {renderModalEdit()}
       </Layout>
     </div>
   );

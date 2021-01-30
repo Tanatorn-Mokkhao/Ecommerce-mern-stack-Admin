@@ -42,3 +42,21 @@ export const deleteProductIndatabase = (payload) => {
     }
   };
 };
+
+export const upDateProduct = (payload) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: productType.UPDATE_PRODUCT_REQUEST });
+      const res = await axios.post("/update/product", { payload });
+      if (res.status == 200) {
+        dispatch({ type: productType.UPDATE_PRODUCT_SUCCESS });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: productType.UPDATE_PRODUCT_FAILURE,
+        payload: error.response.data,
+      });
+    }
+  };
+};
