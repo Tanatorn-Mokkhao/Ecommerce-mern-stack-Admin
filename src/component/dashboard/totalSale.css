@@ -1,0 +1,26 @@
+body{
+    background-color: rgb(241,243,246) ;
+}
+.dash-board{
+    display: grid;
+    grid-template-columns: 1fr
+
+}
+
+
+.count{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    margin-top: 80px;
+    padding: 1rem;
+
+    
+}
+
+.sale-revenue{
+    background-color: white;
+  text-align: start;
+  border-radius: 10px;
+  box-shadow: 0px 5px 50px #aaaaaa;
+
+}

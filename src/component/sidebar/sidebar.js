@@ -15,6 +15,9 @@ function Sidebar(props) {
         <NavLink to="/product">
           <p>Product</p>
         </NavLink>
+        <NavLink to="/order">
+          <p>Order</p>
+        </NavLink>
       </div>
       <div className="main-field">{props.children}</div>
     </div>

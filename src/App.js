@@ -10,6 +10,7 @@ import Signup from "./container/signup/signup";
 import Category from "./container/category/category";
 import { initialData } from "./action/initialDataAction";
 import Product from "./container/product/product";
+import Order from "./container/order/order";
 function App() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
@@ -28,6 +29,7 @@ function App() {
         <Private path="/" exact component={Home} />
         <Private path="/category" component={Category} />
         <Private path="/product" component={Product} />
+        <Private path="/order" component={Order} />
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
       </Switch>

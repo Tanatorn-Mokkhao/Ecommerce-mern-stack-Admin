@@ -151,7 +151,7 @@ function Product() {
   };
   const renderModalPopup = () => {
     return (
-      <Modal show={show} onHide={handleClose} size="lg">
+      <Modal show={show} onHide={handleClose} size="lg" animation={false}>
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
@@ -278,7 +278,7 @@ function Product() {
   };
   const renderModalAdd = () => {
     return (
-      <Modal show={showAdd} onHide={handleCloseAdd} size="lg">
+      <Modal show={showAdd} onHide={handleCloseAdd} size="lg" animation={false}>
         <Modal.Header closeButton>
           <Modal.Title>Add Product</Modal.Title>
         </Modal.Header>
