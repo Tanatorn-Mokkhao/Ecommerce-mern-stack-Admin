@@ -3,13 +3,15 @@ import TotoalSale from "../../component/dashboard/totoalSale";
 import Layout from "../../component/layout/layout";
 import DatePicker from "react-date-picker";
 import { useDispatch } from "react-redux";
-import { getRevenue } from "../../action/dashboardAction";
+import { getFilter, getRevenue } from "../../action/dashboardAction";
 import { format } from "date-fns";
 
 function Home() {
   // const [todate, setTodate] = useState(new Date(Date.now() - 86400000));
   // console.log(format(new Date(), "yyyy/MM/dd"));
   const [fromdate, setFromdate] = useState(format(new Date(), "yyyy-MM-dd"));
+
+  // const [year, setYear] = useState(format(new Date(), "yyyy"));
 
   const dispatch = useDispatch();
 
@@ -25,6 +27,7 @@ function Home() {
     // console.log(fromdate, todate);
     const payload = { fromdate, todate };
     dispatch(getRevenue(payload));
+    dispatch(getFilter());
   }, [fromdate]);
 
   return (
