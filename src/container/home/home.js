@@ -5,7 +5,8 @@ import DatePicker from "react-date-picker";
 import { useDispatch } from "react-redux";
 import { getFilter, getRevenue } from "../../action/dashboardAction";
 import { format } from "date-fns";
-
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:2000");
 function Home() {
   // const [todate, setTodate] = useState(new Date(Date.now() - 86400000));
   // console.log(format(new Date(), "yyyy/MM/dd"));
@@ -19,15 +20,17 @@ function Home() {
     // const getdate = new Date(Date.now(fromdate) + 86400000);
     // const getdate = new Date().getTime();
     // const todate = format(getdate, "yyyy-MM-dd");
-
     const tomorrow = new Date(fromdate);
     tomorrow.setDate(tomorrow.getDate() + 1);
     const todate = format(tomorrow, "yyyy-MM-dd");
-
     // console.log(fromdate, todate);
     const payload = { fromdate, todate };
     dispatch(getRevenue(payload));
     dispatch(getFilter());
+
+    socket.on("changeData", () => {
+      dispatch(getRevenue(payload));
+    });
   }, [fromdate]);
 
   return (
